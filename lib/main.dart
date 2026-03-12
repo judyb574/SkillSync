@@ -89,8 +89,10 @@ class SkillSyncApp extends StatelessWidget {
               }
 
               if (snapshot.hasData && snapshot.data != null) {
-                NotificationService().startListeningForNewNotifications();
-                NotificationService().startListeningForNewMessages();
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  NotificationService().startListeningForNewNotifications();
+                  NotificationService().startListeningForNewMessages();
+                });
                 return const HomeScreen();
               }
 
