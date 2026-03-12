@@ -89,7 +89,6 @@ class NotificationService {
           final data = change.doc.data();
           if (data == null) continue;
 
-          // Skip anything that existed before we started listening
           final createdAt = data['created_at'] as Timestamp?;
           if (createdAt == null || createdAt.compareTo(listenStartTime) <= 0) continue;
 
@@ -144,11 +143,9 @@ class NotificationService {
             final data = change.doc.data();
             if (data == null) continue;
 
-            // Skip anything that existed before we started listening
             final sentAt = data['sent_at'] as Timestamp?;
             if (sentAt == null || sentAt.compareTo(listenStartTime) <= 0) continue;
 
-            // Skip messages sent by the current user
             final sender = data['sender_id'];
             final senderId = sender is DocumentReference
                 ? sender.id
@@ -157,11 +154,7 @@ class NotificationService {
 
             final content = data['content'] as String? ?? 'New message';
 
-            _showLocalBanner(
-              change.doc.id.hashCode,
-              'New message 💬',
-              content,
-            );
+            _showMessageBanner(change.doc.id.hashCode, senderId, content);
           }
         }
       }, onError: (e) {
@@ -182,6 +175,27 @@ class NotificationService {
   }
 
   // ─── HELPERS ──────────────────────────────────────────────────────────────
+
+  Future<void> _showMessageBanner(int id, String senderId, String content) async {
+    try {
+      final userDoc = await FirebaseFirestore.instance
+          .collection('User')
+          .doc(senderId)
+          .get();
+      final data = userDoc.data();
+      final firstName = data?['first_name'] as String? ?? '';
+      final lastName = data?['last_name'] as String? ?? '';
+      final username = data?['username'] as String? ?? 'Someone';
+
+      final displayName = (firstName + ' ' + lastName).trim().isNotEmpty
+          ? (firstName + ' ' + lastName).trim()
+          : username;
+
+      await _showLocalBanner(id, displayName, content);
+    } catch (e) {
+      await _showLocalBanner(id, 'New message 💬', content);
+    }
+  }
 
   Future<void> _showLocalBanner(int id, String title, String body) async {
     const androidDetails = AndroidNotificationDetails(
