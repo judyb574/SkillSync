@@ -9,6 +9,8 @@ import 'package:skillsync/widgets/bottom_nav.dart';
 import 'package:skillsync/widgets/app_appbar.dart';
 import 'package:skillsync/widgets/primary_button.dart';
 
+import '../../widgets/scalable_text.dart';
+
 class MatchingScreen extends StatefulWidget {
   const MatchingScreen({super.key});
 
@@ -209,16 +211,15 @@ class _MatchingScreenState extends State<MatchingScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // 🟦 MODERN MATCH CARD
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: colorScheme.surface, // 🟢 Dynamic Background
+                        color: colorScheme.surface,
                         borderRadius: BorderRadius.circular(24),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(isDark ? 0.3 : 0.04), // 🟢 Dynamic Shadow
+                            color: Colors.black.withOpacity(isDark ? 0.3 : 0.04),
                             blurRadius: 30,
                             offset: const Offset(0, 10),
                           ),
@@ -227,7 +228,6 @@ class _MatchingScreenState extends State<MatchingScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // ⭐ Header
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -242,19 +242,16 @@ class _MatchingScreenState extends State<MatchingScreen> {
                                         size: 18,
                                       ),
                                       const SizedBox(width: 6),
-                                      Text(
+                                      ScalableText(
                                         '${_matches[_currentIndex].likesCount}',
-                                        style: TextStyle(
-                                          color: colorScheme.onSurface, // 🟢 Dynamic Text
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15,
-                                        ),
+                                        baseFontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                        color: colorScheme.onSurface,
                                       ),
                                     ],
                                   ),
                                 ),
                               ),
-
                               Semantics(
                                 button: true,
                                 label: "View full profile",
@@ -262,7 +259,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
                                   tooltip: "View Profile",
                                   icon: Icon(
                                     Icons.info_outline_rounded,
-                                    color: colorScheme.secondary, // 🟢 Dynamic Icon
+                                    color: colorScheme.secondary,
                                   ),
                                   onPressed: () {
                                     Navigator.pushNamed(
@@ -275,10 +272,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
                               ),
                             ],
                           ),
-
                           const SizedBox(height: 8),
-
-                          // 👤 User Identity
                           CircleAvatar(
                             radius: 40,
                             backgroundColor: colorScheme.outline.withOpacity(0.1),
@@ -290,38 +284,30 @@ class _MatchingScreenState extends State<MatchingScreen> {
                                 : null,
                           ),
                           const SizedBox(height: 12),
-                          
                           Semantics(
                             header: true,
-                            child: Text(
+                            child: ScalableText(
                               (_matches[_currentIndex].firstName.isEmpty)
                                   ? _matches[_currentIndex].username
                                   : _matches[_currentIndex].fullName,
-                              style: TextStyle(
-                                color: colorScheme.onSurface,
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: -0.5,
-                              ),
+                              baseFontSize: 22, // Correct placement
+                              fontWeight: FontWeight.bold,
+                              color: colorScheme.onSurface,
+                              style: const TextStyle(letterSpacing: -0.5),
                             ),
                           ),
                           const SizedBox(height: 4),
-                          Text(
+                          ScalableText(
                             _matches[_currentIndex].userBio.isEmpty
                                 ? "New to SkillSync! Tapping into new skills."
                                 : _matches[_currentIndex].userBio,
+                            baseFontSize: 13, // Correct placement
                             textAlign: TextAlign.center,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: colorScheme.secondary,
-                              fontSize: 13,
-                            ),
+                            color: colorScheme.secondary,
                           ),
-
                           const SizedBox(height: 24),
-
-                          // 📊 Skills Exchange Interface
                           _isSkillLoading
                               ? Semantics(
                                   label: "Loading skills",
@@ -344,16 +330,17 @@ class _MatchingScreenState extends State<MatchingScreen> {
                                     Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                                       child: Divider(
-                                        color: colorScheme.outline.withOpacity(0.2), // 🟢 Dynamic Divider
+                                        color: colorScheme.outline.withOpacity(0.2),
                                         thickness: 1,
                                       ),
                                     ),
                                     if (_currentTeaches.isEmpty && _currentLearns.isEmpty)
                                       Padding(
                                         padding: const EdgeInsets.all(10),
-                                        child: Text(
+                                        child: ScalableText(
                                           "Skills loading...",
-                                          style: TextStyle(color: colorScheme.secondary),
+                                          baseFontSize: 14,
+                                          color: colorScheme.secondary,
                                         ),
                                       )
                                     else
@@ -376,21 +363,16 @@ class _MatchingScreenState extends State<MatchingScreen> {
                                       ),
                                   ],
                                 ),
-
                           const SizedBox(height: 8),
                         ],
                       ),
                     ),
-
                     const SizedBox(height: 32),
-
                     PrimaryButton(
                       label: 'ACCEPT MATCH',
                       onPressed: _handleAccept,
                     ),
-
                     const SizedBox(height: 12),
-
                     TextButton(
                       style: TextButton.styleFrom(
                         minimumSize: const Size(48, 48),
@@ -449,24 +431,20 @@ class _MatchingScreenState extends State<MatchingScreen> {
             const SizedBox(height: 24),
             Semantics(
               header: true,
-              child: Text(
+              child: ScalableText(
                 "No Matches Yet",
-                style: TextStyle(
-                  color: colorScheme.onSurface,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                baseFontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 8),
-            Text(
+            ScalableText(
               "We couldn't find any mentors matching your learning skills right now.",
+              baseFontSize: 15,
+              height: 1.5,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: colorScheme.secondary,
-                fontSize: 15,
-                height: 1.5,
-              ),
+              color: colorScheme.secondary,
             ),
             const SizedBox(height: 32),
             PrimaryButton(
@@ -483,15 +461,13 @@ class _MatchingScreenState extends State<MatchingScreen> {
     return Expanded(
       child: Semantics(
         header: true,
-        child: Text(
+        child: ScalableText(
           text,
+          baseFontSize: 11,
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: colorScheme.secondary,
-            fontWeight: FontWeight.w800,
-            fontSize: 11,
-            letterSpacing: 1.2,
-          ),
+          fontWeight: FontWeight.w800,
+          color: colorScheme.secondary,
+          style: const TextStyle(letterSpacing: 1.2),
         ),
       ),
     );
@@ -518,26 +494,21 @@ class _CompactSkillRow extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: Text(
+              child: ScalableText(
                 left,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: colorScheme.onSurface,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
+                baseFontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: colorScheme.onSurface,
               ),
             ),
             Icon(Icons.swap_horiz_rounded, size: 16, color: colorScheme.outline.withOpacity(0.5)),
             Expanded(
-              child: Text(
+              child: ScalableText(
                 right,
+                baseFontSize: 14,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: colorScheme.onSurface,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
+                fontWeight: FontWeight.w500,
+                color: colorScheme.onSurface,
               ),
             ),
           ],
